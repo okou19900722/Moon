@@ -1,6 +1,6 @@
 # Site
-title:              Moon
-bio:                'Minimal, one column jekyll theme.'
+title:              Okou的个人Blog
+bio:                '欢迎来到我的地盘.'
 description:        "Moon is a minimal, one column jekyll theme for your blog."
 reading_time:       true
 words_per_minute:   200
@@ -8,7 +8,8 @@ logo:               'assets/img/logo.png'
 background:         'assets/img/placeholder-big.jpg'
 tiled_bg:           false   # Set this true if you want to tile your background image, otherwise it will be covered
 locale:             en_US
-url:                http://taylantatli.me/Moon
+#url:                http://blog.okou.tk
+url:               http://localhost:4000
 
 # Jekyll
 permalink:          /:title/
@@ -38,22 +39,22 @@ disqus_shortname:   taylantatli
   #ad-slot:
 #bing-verify:
 #email:
-twitter:            username
-facebook:           username
-github:             username
+#twitter:            username
+#facebook:           username
+github:             okou19900722
 #stackoverflow:     123456/username   from a "http://stackoverflow.com/users/123456/username" link
 #linkedin:          username
 #xing:              username
-instagram:          username
+#instagram:          username
 #lastfm:            username
 #tumblr:            username
 #pinterest:         username
 #foursquare:        username
-steam:              username
+#steam:              username
 #dribbble:          username
 #youtube:           username
 #soundcloud:        username
-#weibo:             username
+weibo:             512058895
 #flickr:            username
 #codepen:           username
 #keybase:           username
@@ -63,7 +64,7 @@ steam:              username
 # Gems
 gems:
   - jekyll-mentions
-  - jekyll-feed
+#  - jekyll-feed
   - jekyll-sitemap
   - jekyll-gist
 
