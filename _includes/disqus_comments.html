@@ -1,4 +1,13 @@
 {% if site.disqus_shortname %}
+    <!--PC版-->
+    <div id="SOHUCS" sid="121"></div>
+    <script charset="utf-8" type="text/javascript" src="http://changyan.sohu.com/upload/changyan.js" ></script>
+    <script type="text/javascript">
+    window.changyan.api.config({
+    appid: 'cysAx7eBh',
+    conf: 'prod_2a601716686a82cda5d9f32fd333aeec'
+    });
+    </script>
     <script type="text/javascript">
         var disqus_shortname = '{{ site.disqus_shortname }}';
         (function() {
