@@ -1,7 +1,7 @@
 ---
 layout: project
-title: Php
+title: Blog
 excerpt: "A List of Projects"
 comments: false
-project: php
+project: blog
 ---
