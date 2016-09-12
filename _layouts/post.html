@@ -37,6 +37,9 @@ layout: compress
                 {% include meta.html %}
                 </div>
             </div>
+        <!-- start -->
+				{% if page.comments and site.duoshuo_name %}<div class="ds-thread" data-thread-key="aaa" data-title="ttt" data-url="http://blog.okou.tk"></div>{% endif %}
+		<!-- end -->
         </div>
         {% if page.comments and site.disqus_shortname %}<section id="disqus_thread" class="animated fadeInUp"></section><!-- /#disqus_thread -->{% endif %}
     </header>
