@@ -1,6 +1,7 @@
 ---
 layout: project
-title: All Projects
+title: Java
 excerpt: "A List of Projects"
 comments: false
+project: java
 ---

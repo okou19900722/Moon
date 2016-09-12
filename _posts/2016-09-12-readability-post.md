@@ -1,9 +1,9 @@
 ---
 layout: post
-title:  "我是php中的内容"
+title:  "我是java中的内容"
 date:   2016-09-10
 excerpt: "这里是简介."
-project: php
+project: java
 tag:
 - jekyll 
 - moon

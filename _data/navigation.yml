@@ -1,7 +1,10 @@
 # Site navigation links
 
-- title: Projects
-  url: /projects/
+- title: Java
+  url: /java/
+  
+- title: Php
+  url: /php/
   
 - title: Weibo
   url: http://weibo.com/ilayan
