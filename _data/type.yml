@@ -1,8 +1,11 @@
 # Site type links
 
+- title: 未分类
+  url: /other/
+  
 - title: Java
   url: /java/
   
-- title: Php
-  url: /php/
+- title: Blog
+  url: /blog/
 

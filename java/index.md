@@ -1,7 +1,7 @@
 ---
 layout: project
 title: Java
-excerpt: "A List of Projects"
+excerpt: "java相关的博文"
 comments: false
 project: java
 ---

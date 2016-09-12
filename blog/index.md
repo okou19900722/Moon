@@ -1,7 +1,7 @@
 ---
 layout: project
 title: Blog
-excerpt: "A List of Projects"
+excerpt: "blog相关的博文"
 comments: false
 project: blog
 ---
