@@ -40,9 +40,18 @@ duoshuo_name : okou
   #ad-slot:
 #bing-verify:
 email: 512058895@qq.com
+github:             okou19900722
+weibo:             512058895
+qq:                512058895
+#coding:             okou
+#oschina:             ilayan
+rss:                 true
+
+############################
+
+
 #twitter:            username
 #facebook:           username
-github:             okou19900722
 #stackoverflow:     123456/username   from a "http://stackoverflow.com/users/123456/username" link
 #linkedin:          username
 #xing:              username
@@ -55,10 +64,6 @@ github:             okou19900722
 #dribbble:          username
 #youtube:           username
 #soundcloud:        username
-weibo:             512058895
-qq:                512058895
-coding:             okou
-oschina:             ilayan
 #flickr:            username
 #codepen:           username
 #keybase:           username
