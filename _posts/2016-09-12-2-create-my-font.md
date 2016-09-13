@@ -4,8 +4,7 @@ title:  "创建属于自己的字体"
 date:   2016-09-12
 excerpt: "上一篇说到下载了Moon模版创建自己的博客，Moon模版使用FontAwesome字体，虽然这个字体很全面，包括了github,facebook,twitter等站的图标，甚至国内的微博、qq都有，但毕竟是外国人搞的东西，相对国外来说小众的，只服务国人的网站就找不到对应的字符了."
 project: blog
-tag:
-- moon
+tag: [Font]
 comments: true
 ---
 
