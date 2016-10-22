@@ -2,7 +2,10 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>加减乘除练习</title>
+		<title>Hello MUI</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/mui.min.css">
 		<style>
@@ -287,14 +290,13 @@
 						<ul class="mui-table-view">
 							<li class="mui-table-view-cell mui-icon-answer">
 								
-								<span id="firstNum" class="mui-pull-left mui-table-view-num" type="button">13</span>
-								<span id="fuhao" class="mui-center mui-title mui-table-view-num" type="button" style="font-size: 1.5em">+</span>
-								<span id="secondNum" class="mui-pull-right mui-table-view-num" type="button">14</span>
-							</a>
+								<span id="firstNum" class="mui-pull-left mui-table-view-num" >13</span>
+								<span id="fuhao" class="mui-center mui-title mui-table-view-num"  style="font-size: 1.5em">+</span>
+								<span id="secondNum" class="mui-pull-right mui-table-view-num" >14</span>
 							</li>
 							<li class="mui-table-view-cell mui-icon-answer">
-								<span class="mui-pull-left mui-table-view-num" type="button">=</span>
-								<span id="answer" class="mui-pull-right mui-table-view-num" type="button"></span>
+								<span class="mui-pull-left mui-table-view-num" >=</span>
+								<span id="answer" class="mui-pull-right mui-table-view-num" ></span>
 							</li>
 						</ul>
 				        <ul class="mui-table-view mui-grid-view mui-grid-9">
@@ -483,7 +485,20 @@
 	<script src="js/mui.view.js "></script>
 	<script>
 		mui.init({
-			swipeBack : true //启动右滑关闭功能
+			swipeBack : true, //启动右滑关闭功能
+			beforeback: function(){
+				//处理view的后退与webview后退
+				var oldBack = mui.back;
+				mui.back = function() {
+					if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+						viewApi.back();
+					} else { //执行webview后退
+						oldBack();
+					}
+				};
+				//返回true，继续页面关闭逻辑
+				return false;
+			}
 		});
 		//初始化单页view
 		var viewApi = mui('#app').view({
@@ -511,21 +526,6 @@
 
 		//初始化单页的区域滚动
 		mui('.mui-scroll-wrapper').scroll();
-		//分享操作
-		var shares = {};
-		
-		mui.plusReady(function() {
-			plus.share.getServices(function(s) {
-				if (s && s.length > 0) {
-					for (var i = 0; i < s.length; i++) {
-						var t = s[i];
-						shares[t.id] = t;
-					}
-				}
-			}, function() {
-				console.log("获取分享服务列表失败");
-			});
-		});
 		
 		var myApp = {
 			max : 100,
@@ -648,6 +648,7 @@
 					} else {
 						this.wrongArr[type] = this.wrongArr[type] + 1;
 						this.wrongQuestion[this.wrongQuestionIndex++] = [this.num1, this.num2, answer, rightAns, type];
+						mui("#answer")[0].innerHTML = "";
 					}
 				}
 			}
