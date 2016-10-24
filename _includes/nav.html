@@ -110,5 +110,18 @@
 			  {% endif %}
 			  <li><a class="fa {% if link.icon%}{{link.icon}}{%endif%}" href="{{ domain }}{{ link.url }}" {% if link.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}> {{ link.title }}</a></li>
 			{% endfor %}
+			<li>
+				<a href="#">{{site.data.string.Toy}}</a>
+				<ul class="dl-submenu">
+					{% for link in site.data.toy %}
+					  {% if link.url contains 'http' %}
+					      {% assign domain = '' %}
+					      {% else %}
+					      {% assign domain = site.url %}
+					  {% endif %}
+					  <li><a href="{{ domain }}{{ link.url }}" {% if link.url contains 'http' %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ link.title }}</a></li>
+					{% endfor %}
+				</ul>
+			</li>
 		</ul><!-- /.dl-menu -->
 	</nav><!-- /.dl-menuwrapper -->
