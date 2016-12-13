@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>加减乘除练习</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+			html,
+			body {
+				background-color: #efeff4;
+			}
+			.mui-views,
+			.mui-view,
+			.mui-pages,
+			.mui-page,
+			.mui-page-content {
+				position: absolute;
+				left: 0;
+				right: 0;
+				top: 0;
+				bottom: 0;
+				width: 100%;
+				height: 100%;
+				background-color: #efeff4;
+			}
+			.mui-pages {
+				top: 46px;
+				height: auto;
+			}
+			.mui-scroll-wrapper,
+			.mui-scroll {
+				background-color: #efeff4;
+			}
+			.mui-page.mui-transitioning {
+				-webkit-transition: -webkit-transform 300ms ease;
+				transition: transform 300ms ease;
+			}
+			.mui-page-left {
+				-webkit-transform: translate3d(0, 0, 0);
+				transform: translate3d(0, 0, 0);
+			}
+			.mui-ios .mui-page-left {
+				-webkit-transform: translate3d(-20%, 0, 0);
+				transform: translate3d(-20%, 0, 0);
+			}
+			.mui-navbar {
+				position: fixed;
+				right: 0;
+				left: 0;
+				z-index: 10;
+				height: 44px;
+				background-color: #f7f7f8;
+			}
+			.mui-navbar .mui-bar {
+				position: absolute;
+				background: transparent;
+				text-align: center;
+			}
+			.mui-android .mui-navbar-inner.mui-navbar-left {
+				opacity: 0;
+			}
+			.mui-ios .mui-navbar-left .mui-left,
+			.mui-ios .mui-navbar-left .mui-center,
+			.mui-ios .mui-navbar-left .mui-right {
+				opacity: 0;
+			}
+			.mui-navbar .mui-btn-nav {
+				-webkit-transition: none;
+				transition: none;
+				-webkit-transition-duration: .0s;
+				transition-duration: .0s;
+			}
+			.mui-navbar .mui-bar .mui-title {
+				display: inline-block;
+				width: auto;
+			}
+			.mui-page-shadow {
+				position: absolute;
+				right: 100%;
+				top: 0;
+				width: 16px;
+				height: 100%;
+				z-index: -1;
+				content: '';
+			}
+			.mui-page-shadow {
+				background: -webkit-linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+				background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 10%, rgba(0, 0, 0, .01) 50%, rgba(0, 0, 0, .2) 100%);
+			}
+			.mui-navbar-inner.mui-transitioning,
+			.mui-navbar-inner .mui-transitioning {
+				-webkit-transition: opacity 300ms ease, -webkit-transform 300ms ease;
+				transition: opacity 300ms ease, transform 300ms ease;
+			}
+			.mui-page {
+				display: none;
+			}
+			.mui-pages .mui-page {
+				display: block;
+			}
+			.mui-page .mui-table-view:first-child {
+				margin-top: 15px;
+			}
+			.mui-page .mui-table-view:last-child {
+				margin-bottom: 30px;
+			}
+			.mui-table-view {
+				margin-top: 20px;
+			}
+			
+			.mui-table-view span.mui-pull-right {
+				color: #999;
+			}
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+			.head {
+				height: 40px;
+			}
+			#head {
+				line-height: 40px;
+			}
+			.head-img {
+				width: 40px;
+				height: 40px;
+			}
+			#head-img1 {
+				position: absolute;
+				bottom: 10px;
+				right: 40px;
+				width: 40px;
+				height: 40px;
+			}
+			.update {
+				font-style: normal;
+				color: #999999;
+				margin-right: -25px;
+				font-size: 15px
+			}
+			.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #000;
+			}
+			.mui-ios .mui-navbar .mui-bar .mui-title {
+				position: static;
+			}
+		
+			/*跨webview需要手动指定位置*/
+			
+			.mui-plus header.mui-bar {
+				display: none!important;
+			}
+			.mui-plus .mui-bar-nav~.mui-content {
+				padding: 0!important;
+			}
+			
+			.mui-plus .plus{
+				display: inline;
+			}
+			
+			.plus{
+				display: none;
+			}
+			
+			#topPopover {
+				position: fixed;
+				top: 16px;
+				right: 6px;
+			}
+			#topPopover .mui-popover-arrow {
+				left: auto;
+				right: 6px;
+			}
+			p {
+				text-indent: 22px;
+			}
+			span.mui-icon {
+				font-size: 14px;
+				color: #007aff;
+				margin-left: -15px;
+				padding-right: 10px;
+			}
+			.mui-popover {
+				height: 300px;
+			}
+			.mui-content {
+				padding: 10px;
+			}
+			.mui-icon-number0:before{
+				content:"0";
+			}
+			.mui-icon-number1:before{
+				content:"1";
+			}
+			.mui-icon-number2:before{
+				content:"2";
+			}
+			.mui-icon-number3:before{
+				content:"3";
+			}
+			.mui-icon-number4:before{
+				content:"4";
+			}
+			.mui-icon-number5:before{
+				content:"5";
+			}
+			.mui-icon-number6:before{
+				content:"6";
+			}
+			.mui-icon-number7:before{
+				content:"7";
+			}
+			.mui-icon-number8:before{
+				content:"8";
+			}
+			.mui-icon-number9:before{
+				content:"9";
+			}
+			.mui-icon-number_clear:before{
+				content:"清除";
+				font-size:0.7em;
+			}
+			.mui-icon-number_ok:before{
+				content:"确定";
+				font-size:0.7em;
+			}
+			.mui-icon-num {
+				font-family:"楷体";
+				font-size: 2.5em;
+			}
+			.mui-icon-answer{
+				font-family:"楷体";
+				line-height: 1em;
+				font-size: 3em;
+			}
+			.mui-table-view{
+				background-color: #f7f7f8;
+			}
+			.mui-table-view-num{
+				color: #999;
+			}
+			a, a:hover, a:focus {
+			    text-decoration: none;
+			}
+			.mui-grid-view.mui-grid-9 .mui-table-view-cell{
+				padding: 7% 20px;
+			}
+
+		</style>
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="css/app.css" />
+	</head>
+
+	<body class="mui-fullscreen">
+		<!--页面主结构开始-->
+		<div id="app" class="mui-views">
+			<div class="mui-view">
+				<div class="mui-navbar">
+				</div>
+				<div class="mui-pages">
+				</div>
+			</div>
+		</div>
+		<!--页面主结构结束-->
+		<!--单页面开始-->
+		<div id="main" class="mui-page">
+			<!--页面标题栏开始-->
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<h1 class="mui-center mui-title">加减乘除练习</h1>
+				<a type="button" class="mui-left mui-btn mui-btn-link mui-btn-nav mui-pull-right" href="#topPopover">
+					菜单<span class="mui-icon mui-icon-forward"></span>
+				</a>
+				<!--<a class="mui-btn mui-btn-blue mui-btn-link mui-pull-right mui-icon mui-icon-forward mui-right">设置</a>-->
+			</div>
+			<!--页面标题栏结束-->
+			<!--页面主内容区开始-->
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-cell mui-icon-answer">
+								
+								<span id="firstNum" class="mui-pull-left mui-table-view-num" >13</span>
+								<span id="fuhao" class="mui-center mui-title mui-table-view-num"  style="font-size: 1.5em">+</span>
+								<span id="secondNum" class="mui-pull-right mui-table-view-num" >14</span>
+							</li>
+							<li class="mui-table-view-cell mui-icon-answer">
+								<span class="mui-pull-left mui-table-view-num" >=</span>
+								<span id="answer" class="mui-pull-right mui-table-view-num" ></span>
+							</li>
+						</ul>
+				        <ul class="mui-table-view mui-grid-view mui-grid-9">
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number1 mui-icon-num" data-num="1"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number2 mui-icon-num" data-num="2"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number3 mui-icon-num" data-num="3"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number4 mui-icon-num" data-num="4"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number5 mui-icon-num" data-num="5"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number6 mui-icon-num" data-num="6"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number7 mui-icon-num" data-num="7"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number8 mui-icon-num" data-num="8"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number9 mui-icon-num" data-num="9"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number_clear mui-icon-num"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number0 mui-icon-num" data-num="0"></a>
+				            </li>
+				         	<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-4">
+				            		<a href="#"  class="mui-icon-number_ok mui-icon-num"></a>
+				            </li>
+				        </ul> 
+					</div>
+				</div>
+				<!--右上角弹出菜单-->
+				<div id="topPopover" class="mui-popover">
+					<div class="mui-popover-arrow"></div>
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell"><a class="mui-navigate-right" href="#total">统计</a></li>
+								<li class="mui-table-view-cell"><a class="mui-navigate-right" href="#wrongTotal">错题</a></li>
+								<li class="mui-table-view-cell"><a class="mui-navigate-right" href="#setting">设置</a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<!--页面主内容区结束-->
+
+		</div>
+		<!--单页面结束-->
+
+		<div id="setting" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>返回
+				</button>
+				<h1 class="mui-center mui-title">设置</h1>
+			<!-- 	<a type="button" class="mui-left mui-btn mui-btn-link mui-btn-nav mui-pull-right" >
+					完成
+				</a> -->
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<li class="mui-table-view-divider">加减法设置</li>
+							<li class="mui-table-view-cell">
+								设置以内练习
+								<div class="mui-numbox mui-pull-right" data-numbox-min="10" style="width: 10em">
+									<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									<input id="max" class="mui-input-numbox" type="number" value="100"/>
+									<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								练习加法
+								<div id="add" class="mui-switch mui-active mui-switch-mini myApp-fuhao">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell ">
+								练习减法
+								<div id="subtract" class="mui-switch mui-active mui-switch-mini myApp-fuhao">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+						</ul>
+						<ul class="mui-table-view">
+							<li class="mui-table-view-divider">乘除法设置</li>
+							<li class="mui-table-view-cell">
+								设置以内练习
+								<div class="mui-numbox mui-pull-right" data-numbox-min="10" style="width: 10em">
+									<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+									<input id="max2" class="mui-input-numbox" type="number" value="10" />
+									<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+								</div>
+							</li>
+							<li class="mui-table-view-cell">
+								练习乘法
+								<div id="multiply" class="mui-switch mui-active mui-switch-mini myApp-fuhao">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+							<li class="mui-table-view-cell ">
+								练习除法
+								<div id="divide" class="mui-switch mui-active mui-switch-mini myApp-fuhao">
+									<div class="mui-switch-handle"></div>
+								</div>
+							</li>
+						</ul>
+						
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="total" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>返回
+				</button>
+				<h1 class="mui-center mui-title">练习统计</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+					    <table class="table table-bordered table-hover table-striped">
+							<thead>
+								<tr>
+									<th>题目</th>
+									<th>正确数量</th>
+									<th>错误数量</th>
+								</tr>
+							</thead>
+							<tbody id="totalData">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="wrongTotal" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<button type="button" class="mui-left mui-action-back mui-btn  mui-btn-link mui-btn-nav mui-pull-left">
+					<span class="mui-icon mui-icon-left-nav"></span>返回
+				</button>
+				<h1 class="mui-center mui-title">错误统计</h1>
+			</div>
+			<div class="mui-page-content">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						 <table class="table table-bordered table-hover table-striped">
+							<thead>
+								<tr>
+									<th>题目</th>
+									<th>你的答案</th>
+									<th>正确答案</th>
+								</tr>
+							</thead>
+							<tbody id="wrongTotalData">
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+	</body>
+	<script src="js/mui.min.js "></script>
+	<script src="js/mui.view.js "></script>
+	<script>
+		mui.init({
+			swipeBack : true, //启动右滑关闭功能
+			beforeback: function(){
+				//处理view的后退与webview后退
+				var oldBack = mui.back;
+				mui.back = function() {
+					if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+						viewApi.back();
+					} else { //执行webview后退
+						oldBack();
+					}
+				};
+				//返回true，继续页面关闭逻辑
+				return false;
+			}
+		});
+		//初始化单页view
+		var viewApi = mui('#app').view({
+			defaultPage: '#main'
+		});
+
+		//popover 点击之后自动隐藏
+		document.getElementById("topPopover").addEventListener('tap', function(event) {
+			mui('#topPopover').popover('toggle');
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		//初始化单页的区域滚动
+		mui('.mui-scroll-wrapper').scroll();
+		
+		var myApp = {
+			max : 100,
+			max2 : 10,
+			fuhao : 0,
+			fuhaoArr : [],
+			fuhaoStr : ["＋","－","×","÷"],
+			fuhaoChineseStr : ["加法","减法","乘法","除法"],
+			rightArr : [0,0,0,0],
+			wrongArr : [0,0,0,0],
+			wrongQuestion : [],
+			wrongQuestionIndex : 0,
+			num1:0,
+			num2:0,
+			setting:function(max, max2, add, subtract, multiply, divide){
+				this.max = max;
+				this.max2 = max2;
+				this.fuhaoArr = [];
+				var index = 0;
+				if(add) {
+					this.fuhaoArr[index++] = 0;
+				}
+				if(subtract) {
+					this.fuhaoArr[index++] = 1;
+				}
+				if(multiply) {
+					this.fuhaoArr[index++] = 2;
+				}
+				if(divide) {
+					this.fuhaoArr[index++] = 3;
+				}
+				this.init()
+			},
+			init:function(){
+				var n = this.random(0, this.fuhaoArr.length);
+				var type = this.fuhaoArr[n];
+				this.fuhao = type;
+				mui("#fuhao")[0].innerHTML = this.fuhaoStr[type]
+				switch(type) {
+					case 0:
+					case 1:
+						var n1 = this.random(1, this.max);
+						var n2 = 0;
+						do
+						{
+							n2 = this.random(1, this.max);
+						}while(n2 == n1);
+						var mi = n1 > n2 ? n2 : n1;
+						var ma = n1 > n2 ? n1 : n2;
+						if(type == 0)
+						{
+							this.num1 = ma - mi;
+							this.num2 = mi;
+						}
+						else
+						{
+							this.num1 = ma;
+							this.num2 = mi;
+						}
+						break;
+					case 2:
+					case 3:
+						var n1 = this.random(1, this.max2);
+						var n2 = 0;
+						do
+						{
+							n2 = this.random(1, this.max2);
+						}while(n2 == n1);
+						var mi = n1 > n2 ? n2 : n1;
+						var ma = n1 > n2 ? n1 : n2;
+						if(type == 2)
+						{
+							this.num1 = mi;
+							this.num2 = ma;
+						}
+						else
+						{
+							this.num1 = mi * ma;
+							this.num2 = mi;
+						}
+						break;
+				}
+				mui("#firstNum")[0].innerHTML = this.num1;
+				mui("#secondNum")[0].innerHTML = this.num2;
+				mui("#answer")[0].innerHTML = "";
+			},
+
+			random:function(min, max)
+			{
+				var num = max - min;
+				return Math.floor(Math.random() * num) + min;
+			},
+
+			answer:function(ans) {
+				var answer = parseInt(ans);
+				if(answer == NaN) {
+					mui.alert("请输入答案")
+				} else {
+					var rightAns = 0;
+					var type = this.fuhao;
+					switch(type) {
+						case 0 :
+							rightAns = this.num1 + this.num2;
+							break;
+						case 1 :
+							rightAns = this.num1 - this.num2;
+							break;
+						case 2 :
+							rightAns = this.num1 * this.num2;
+							break;
+						case 3 :
+							rightAns = this.num1 / this.num2;
+							break;
+					}
+					var yes = rightAns == answer;
+					mui.alert(yes ? "回答正确，你真棒！！" : "哎呀，真可惜！再接再厉！");
+					if(yes) {
+						this.rightArr[type] = this.rightArr[type] + 1;
+						this.init();
+					} else {
+						this.wrongArr[type] = this.wrongArr[type] + 1;
+						this.wrongQuestion[this.wrongQuestionIndex++] = [this.num1, this.num2, answer, rightAns, type];
+						mui("#answer")[0].innerHTML = "";
+					}
+				}
+			}
+		};
+		myApp.setting(100, 10, true, true, true ,true);
+
+		var view = viewApi.view;
+		(function($) {
+
+			//处理view的后退与webview后退
+			var oldBack = $.back;
+			$.back = function() {
+				if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+					viewApi.back();
+				} else { //执行webview后退
+					oldBack();
+				}
+			};
+			//监听页面切换事件方案1,通过view元素监听所有页面切换事件，目前提供pageBeforeShow|pageShow|pageBeforeBack|pageBack四种事件(before事件为动画开始前触发)
+			//第一个参数为事件名称，第二个参数为事件回调，其中e.detail.page为当前页面的html对象
+			view.addEventListener('pageBeforeShow', function(e) {
+				var pageId = e.detail.page.id;
+				if(pageId == "total") {
+					mui("#totalData")[0].innerHTML = "";
+					var str = "";
+					for(var i = 0; i < myApp.fuhaoArr.length; i++)
+					{
+						var fu = myApp.fuhaoArr[i];
+						str += "<tr><td>" + myApp.fuhaoChineseStr[fu] + "</td><td>" + myApp.rightArr[fu] + "</td><td>" + myApp.wrongArr[fu] + "</td></tr>";
+					}
+					mui("#totalData")[0].innerHTML = str;
+				} else if(pageId == "wrongTotal"){
+					mui("#wrongTotalData")[0].innerHTML = "";
+					var total = myApp.wrongQuestion;
+					var str = "";
+					for(var i = 0; i < myApp.wrongQuestionIndex; i++) {
+						var wrongQue = myApp.wrongQuestion[i];
+						var num1 = wrongQue[0];
+						var num2 = wrongQue[1];
+						var ans = wrongQue[2];
+						var rightAns = wrongQue[3];
+						var fu = myApp.fuhaoStr[wrongQue[4]];
+						var question = num1 + fu + num2
+						str += "<tr><td>" + question + "</td><td>" + ans + "</td><td>" + rightAns + "</td></tr>";
+					}
+					mui("#wrongTotalData")[0].innerHTML = str;
+				}
+			});
+			// view.addEventListener('pageShow', function(e) {
+			// 					console.log(e.detail.page.id + ' show');
+			// });
+			view.addEventListener('pageBeforeBack', function(e) {
+				var pageId = e.detail.page.id;
+				if(pageId == "setting") {
+					var max = mui("#max")[0].value;
+					var max2 = mui("#max2")[0].value;
+					var add = mui("#add")[0].classList.contains("mui-active");
+					var subtract = mui("#subtract")[0].classList.contains("mui-active");
+					var multiply = mui("#multiply")[0].classList.contains("mui-active");
+					var divide = mui("#divide")[0].classList.contains("mui-active");
+
+					myApp.setting(max, max2, add, subtract, multiply ,divide);
+				}
+			});
+			// view.addEventListener('pageBack', function(e) {
+			// 					console.log(e.detail.page.id + ' back');
+			// });
+		})(mui);
+		
+
+		var nums = mui(".mui-icon-num");
+		for(var i = 0; i < nums.length; i++) {
+			var numDom = nums[i];
+			numDom.addEventListener("tap", function(e){
+				var target = e.detail.target;
+				var classList = target.classList;
+				if(classList.contains("mui-icon-number_clear")) {
+					var num = mui("#answer")[0].innerHTML;
+					mui("#answer")[0].innerHTML = num.substring(0, num.length - 1);
+				} else if(classList.contains("mui-icon-number_ok")) {
+					var num = mui("#answer")[0].innerHTML;
+					myApp.answer(num);
+				} else {
+					var num = target.dataset.num;
+					var oldNum = mui("#answer")[0].innerHTML;
+					if(oldNum.length == 12) {
+						mui.toast("最多只能输入12个数字");
+					} else {
+						mui("#answer")[0].innerHTML = oldNum + num;
+					}
+				}
+			});
+		}
+
+		var switchs = mui(".myApp-fuhao");
+		for (var i = switchs.length - 1; i >= 0; i--) {
+			var s = switchs[i];
+			s.addEventListener("toggle", function(e){
+				if(!e.detail.isActive) {
+					var allFalse = true;
+					for(var j = switchs.length - 1; j >= 0; j--) {
+						var ss = switchs[j];
+						if(ss.classList.contains("mui-active")) {
+							allFalse = false;
+							break;
+						}
+					}
+					if(allFalse) {
+						mui.alert("至少练习一种！");
+						mui(e.target).switch().toggle();
+					}
+				}
+				
+				
+			});
+		
+		}
+
+
+
+
+	</script>
+
+</html>
