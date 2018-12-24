@@ -74,7 +74,7 @@ dependencies {
 使用maven，通常有两种方式来配置AnnotationProcessor
 
 一种是直接配置编译器
-([示例](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-maven-compiler-args))，但这种配置需要给依赖加上classifier为processor的配置
+([**示例**](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-maven-compiler-args))，但这种配置需要给依赖加上classifier为processor的配置
 
 ```xml
 <dependencies>
@@ -106,7 +106,7 @@ dependencies {
 ```
 
 别一种是通过processor插件来配置
-([示例](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-maven-processor-plugin))
+([**示例**](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-maven-processor-plugin))
 
 ```xml
 <plugin>
@@ -152,8 +152,8 @@ dependencies {
 >注意：gradle 5的annotationProcessor不再使用compile配置的classpath，因此需要使用annotationProcessor来配置，而gradle 4则可以通过compile配置
 
 第一种配置编译器的方案：
-([gradle4示例](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle4-compiler-args))
-([gradle5示例](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle5-compiler-args))
+([**gradle4示例**](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle4-compiler-args))
+([**gradle5示例**](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle5-compiler-args))
 
 ```kotlin
 tasks.getByName("compileJava") {
@@ -167,8 +167,8 @@ tasks.getByName("compileJava") {
 >注意，这种配置有个问题就是生成的java代码在build/classes/java/main里，打包的时候会包含进去，需要再配置Jar来把*.java给排除
 
 第二种通过自定义task配置的方案：
-([gradle4示例](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle4-custom-task))
-([gradle5示例](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle5-custom-task))
+([**gradle4示例**](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle4-custom-task))
+([**gradle5示例**](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle5-custom-task))
 ```kotlin
 task<JavaCompile>("annotationProcessing") {
     source = sourceSets["main"].java
@@ -189,5 +189,11 @@ task<JavaCompile>("annotationProcessing") {
 tasks.getByName("compileJava").dependsOn("annotationProcessing")
 ```
 
-这里推荐第二种：自定义task的配置。
+这里推荐第二种：自定义task的配置。原因如下，如果有错误可以指出
+
+1. 第二种粒度更小，在只需要执行AnnotationProcessor的时候可以只执行它
+2. 第一种生成的代码在 `build/classes/java/main` 目录下，而这个目录同时也是编译之后的 `.class` 文件，这导致源码与编译代码混在了一起，打包还需要额外配置将他排除在外
+3. 假设第二条通过配置 `codegen.output.service_proxy=generated` 来配置 `service_proxy` 的输出目录，哪怕将generated目录添加到sourceSet，也无法编译。
+
+
 
