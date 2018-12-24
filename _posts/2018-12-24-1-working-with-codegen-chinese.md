@@ -62,7 +62,7 @@ package examples;
 ```
 
 使用 `gradle`，你需要添加以下依赖
-```groovy
+```kotlin
 dependencies {
     compile("io.vertx:vertx-core:3.6.2")
     compile("io.vertx:vertx-codegen:3.6.2")
@@ -144,7 +144,7 @@ gradle与maven一样，也有两种配置，一种是配置编译器，一种是
 
 ```kotlin
 dependencies {
- annotationProcessor("io.vertx:vertx-codegen:3.6.2:processor")
+    annotationProcessor("io.vertx:vertx-codegen:3.6.2:processor")
 }
 ```
 >注意：gradle 5的annotationProcessor不再使用compile配置的classpath，因此需要使用annotationProcessor来配置，而gradle 4则可以通过compile配置
