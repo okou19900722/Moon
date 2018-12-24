@@ -1,3 +1,7 @@
+.idea
 _site/
 .sass-cache/
 .jekyll-metadata
+/favicon(1).ico
+/.project
+/.settings/

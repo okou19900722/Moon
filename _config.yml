@@ -1,14 +1,15 @@
 # Site
-title:              Moon
-bio:                'Minimal, one column jekyll theme.'
-description:        "Moon is a minimal, one column jekyll theme for your blog."
+title:              Okou的个人Blog
+bio:                '欢迎来到我的地盘.'
+description:        "一个java开发者的Blog."
 reading_time:       true
 words_per_minute:   200
 logo:               'assets/img/logo.png'
-background:         'assets/img/placeholder-big.jpg'
+background:         'assets/img/background.png'
 tiled_bg:           false   # Set this true if you want to tile your background image, otherwise it will be covered
 locale:             en_US
-url:                https://taylantatli.github.io/Moon
+url:                https://blog.okou.tk
+#url:               http://localhost:4000
 
 # Jekyll
 permalink:          /:title/
@@ -26,7 +27,8 @@ sass:
   style:            compressed
 
 # Comments
-disqus_shortname:   taylantatli
+#disqus_shortname:   taylantatli
+duoshuo_name : okou
 
 # Social
 # if you don't have any of social below, comment the line.
@@ -37,25 +39,33 @@ disqus_shortname:   taylantatli
   #ad-client:
   #ad-slot:
 #bing-verify:
-#email:
-twitter:            username
-facebook:           username
-github-url:         username
+email: 512058895@qq.com
+#twitter:            username
+#facebook:           username
+github-url:             okou19900722
+qq:                512058895
+#coding:             okou
+#oschina:             ilayan
+rss:                 true
+
+############################
+
+
 #stackoverflow:     123456/username   from a "http://stackoverflow.com/users/123456/username" link
 #linkedin:          username
 #xing:              username
-instagram:          username
+#instagram:          username
 #lastfm:            username
 #tumblr:            username
 #medium:            '@username'
 #pinterest:         username
 #foursquare:        username
-steam:              username
+#steam:              username
 #dribbble:          username
 #youtube:           username
 #youtube-channel:   channel
 #soundcloud:        username
-#weibo:             username
+weibo:             512058895
 #flickr:            username
 #codepen:           username
 #keybase:           username
@@ -65,7 +75,7 @@ steam:              username
 # Gems
 gems:
   - jekyll-mentions
-  - jekyll-feed
+#  - jekyll-feed
   - jekyll-sitemap
   - jekyll-gist
 

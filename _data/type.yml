@@ -1,0 +1,14 @@
+# Site type links
+
+- title: 未分类
+  url: /other/
+  
+- title: Java
+  url: /java/
+  
+- title: Blog
+  url: /blog/
+
+- title: Vert.x 3
+  url: /vert.x-3/
+
