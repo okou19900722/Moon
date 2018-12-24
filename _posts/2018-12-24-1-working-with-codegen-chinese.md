@@ -195,5 +195,34 @@ tasks.getByName("compileJava").dependsOn("annotationProcessing")
 2. 第一种生成的代码在 `build/classes/java/main` 目录下，而这个目录同时也是编译之后的 `.class` 文件，这导致源码与编译代码混在了一起，打包还需要额外配置将他排除在外
 3. 假设第二条通过配置 `codegen.output.service_proxy=generated` 来配置 `service_proxy` 的输出目录，哪怕将generated目录添加到sourceSet，也无法编译。
 
+# vertx-codegen 里的一些概念
 
+上面的例子，我们用到了 `@ProxyGen` 注解，那么这个注解是干什么用的呢？
+
+在 `vertx-codegen` **3.6.0** 版本之前，`@ProxyGen` 注解是属于 `vertx-codegen` 包的，在3.6.0版本之后，这个类及相关的类移到了 `vertx-service-proxy` 包。 
+
+3.6.0版本可以算是 `vertx-codegen` 的一个里程碑：他更好的支持自定义的功能。随着3.6.0版本孵化的[项目](https://github.com/vert-x3/vertx-web/tree/master/vertx-web-api-service)
+提供了更好的说明。他使用了自定义的 `@WebApiServiceGen` 注解。
+
+## 概念
+
+Model, ModelProvider, Generator, GeneratorLoader, TypeInfo
+
+### Model 
+
+`Model` 类是用来描述某个功能类的结构的，比如 `DataObjectModel` 是根据 `Getter`, `Setter`， `Adder` 方法来生成字段信息 `PropertyInfo` 。
+
+
+`vertx-codegen` 内置了5种Model(3.6.0 之前是6种)
+
+* ClassModel : 在接口上使用 `@VertxGen` 注解之后，会生成对应的ClassModel对象，ClassModel对象包含接口的方法和静态变量信息。通常是用来转换api用的，比如vertx-lang-*模块，和vertx-rx模块
+* DataObjectModel : 在接口或者类上使用 `@DataObject` 注解之后，会生成对应的DataObjectModel对象，DataObjectModel 包含数据类的字段信息
+* EnumModel : 在枚举上使用 `@VertxGen` 注解之后，会生成对应的EnumModel对象，包含枚举的values信息（只包括枚举的name，而不包括方法等信息）
+* ModuleModel : 只有添加了 `package-info.java` 文件，并在该文件的包定义上使用 `@ModuleGen` 注解之后，才会执行 `vertx-codegen` 的AnnotationProcessor任务， 
+* PackageModel  : 所有按 `vertx-codegen` 规则生成的Model所在的包都会生成对应的PackageModel
+
+### ModelProvider
+
+ `vertx-codegen` 通过java的 `ServiceLoader` 类加载用户自定义的 `ModelProvider`, 并调用 `getModel` 方法来获取自定义的 `Model`，如果返回null，则忽略
+ 
 
