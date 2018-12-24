@@ -81,7 +81,7 @@ dependencies {
     <dependency>
         <groupId>io.vertx</groupId>
         <artifactId>vertx-codegen</artifactId>
-        <version>${stack.version}</version>
+        <version>3.6.2</version>
         <classifier>processor</classifier>
     </dependency>
 </dependencies>
