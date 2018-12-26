@@ -201,28 +201,61 @@ tasks.getByName("compileJava").dependsOn("annotationProcessing")
 
 在 `vertx-codegen` **3.6.0** 版本之前，`@ProxyGen` 注解是属于 `vertx-codegen` 包的，在3.6.0版本之后，这个类及相关的类移到了 `vertx-service-proxy` 包。 
 
-3.6.0版本可以算是 `vertx-codegen` 的一个里程碑：他更好的支持自定义的功能。随着3.6.0版本孵化的[项目](https://github.com/vert-x3/vertx-web/tree/master/vertx-web-api-service)
+3.6.0版本可以算是 `vertx-codegen` 的一个里程碑：他更好的支持自定义的功能。随着3.6.0版本孵化的[**项目**](https://github.com/vert-x3/vertx-web/tree/master/vertx-web-api-service)
 提供了更好的说明。他使用了自定义的 `@WebApiServiceGen` 注解。
 
 ## 概念
 
-Model, ModelProvider, Generator, GeneratorLoader, TypeInfo
+`Model`, `ModelProvider`, `Generator`, `GeneratorLoader`, `TypeInfo`
 
 ### Model 
 
 `Model` 类是用来描述某个功能类的结构的，比如 `DataObjectModel` 是根据 `Getter`, `Setter`， `Adder` 方法来生成字段信息 `PropertyInfo` 。
 
-
 `vertx-codegen` 内置了5种Model(3.6.0 之前是6种)
 
-* ClassModel : 在接口上使用 `@VertxGen` 注解之后，会生成对应的ClassModel对象，ClassModel对象包含接口的方法和静态变量信息。通常是用来转换api用的，比如vertx-lang-*模块，和vertx-rx模块
+* ClassModel : 在接口上使用 `@VertxGen` 注解之后，会生成对应的ClassModel对象，ClassModel类包含接口的方法和静态变量信息。通常是用来转换api用的，比如vertx-lang-*模块，和vertx-rx模块
 * DataObjectModel : 在接口或者类上使用 `@DataObject` 注解之后，会生成对应的DataObjectModel对象，DataObjectModel 包含数据类的字段信息
 * EnumModel : 在枚举上使用 `@VertxGen` 注解之后，会生成对应的EnumModel对象，包含枚举的values信息（只包括枚举的name，而不包括方法等信息）
 * ModuleModel : 只有添加了 `package-info.java` 文件，并在该文件的包定义上使用 `@ModuleGen` 注解之后，才会执行 `vertx-codegen` 的AnnotationProcessor任务， 
 * PackageModel  : 所有按 `vertx-codegen` 规则生成的Model所在的包都会生成对应的PackageModel
 
+- ProxyModel : ProxyModel继承自ClassModel，在接口上使用 `@ProxyGen` 注解之后，会生成对应的ProxyModel对象。ProxyModel类包含
+
 ### ModelProvider
 
- `vertx-codegen` 通过java的 `ServiceLoader` 类加载用户自定义的 `ModelProvider`, 并调用 `getModel` 方法来获取自定义的 `Model`，如果返回null，则忽略
+`vertx-codegen` 通过java的 `ServiceLoader` 类加载用户自定义的 `ModelProvider`, 并调用 `getModel` 方法来获取自定义的 `Model`，如果返回null，则忽略。
  
+### Generator
+
+用来生成需要的代码的 `生成器` 。3.6.0之前使用mvel模版引擎，但mvel与jdk10有兼容问题，所以在3.6.0中尝试将mvel移除（保留了兼容版本）。
+
+### GeneratorLoader
+
+`vertx-codegen` 通过java的 `ServiceLoader` 类加载用户自定义的 `GeneratorLoader`, 并调用 `loadGenerators` 方法来获取自定义的 `Generator`
+
+### TypeInfo
+
+TypeInfo与Model有点相似，但Model按不同功能而处理不同的数据，而TypeInfo只包含类的字义（包括泛型定义，是否可空等）
+
+## 解剖 vertx-service-proxy
+
+因为 `vertx-codegen` 3.6.0之前的版本对自定义Generator和Model不是很友好，因此我们主要讲3.6.0之后的版本。
+
+首先是 `ModelProvider` ，`vertx-service-proxy` 提供了一个类[**ProxyModelProvider**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/model/ProxyModelProvider.java)
+用来提供自定义的Model对象[**ProxyModel**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/model/ProxyModel.java)
+
+ProxyModelProvider的实现很简单，使用了@ProxyGen注解的类，会生成ProxyModel对象。
+
+接着是 `GeneratorLoader`，`vertx-service-proxy` 提供的类是[**ServiceProxyGenLoader**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/ServiceProxyGenLoader.java) ，
+他的 `loadGenerators` 方法返回了两个Generator：[**ServiceProxyHandlerGen**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/ServiceProxyHandlerGen.java) 
+和 [**ServiceProxyGen**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/ServiceProxyGen.java)
+
+
+以上这些可以查看vertx-service-proxy的services[**目录**](https://github.com/vert-x3/vertx-service-proxy/tree/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/resources/META-INF/services)
+model[**目录**](https://github.com/vert-x3/vertx-service-proxy/tree/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/model)
+（本文作文时的版本）
+
+
+
 
