@@ -197,9 +197,9 @@ tasks.getByName("compileJava").dependsOn("annotationProcessing")
 
 # vertx-codegen 里的一些概念
 
-上面的例子，我们用到了 `@ProxyGen` 注解，那么这个注解是干什么用的呢？
+上面的例子，我们用到了 `@ProxyGen` 注解，那么这个注解是干什么用的呢？下面我们来说说 `vertx-codegen` 里的一些概念
 
-在 `vertx-codegen` **3.6.0** 版本之前，`@ProxyGen` 注解是属于 `vertx-codegen` 包的，在3.6.0版本之后，这个类及相关的类移到了 `vertx-service-proxy` 包。 
+>在 `vertx-codegen` **3.6.0** 版本之前，为`vertx-service-proxy` 提供服务，但与 `vertx-codegen` 相关的类都是属于 `vertx-codegen` 包的，在3.6.0版本之后，除 `@ProxyGen` 这个类，其他类都移到了 `vertx-service-proxy` 包。 
 
 3.6.0版本可以算是 `vertx-codegen` 的一个里程碑：他更好的支持自定义的功能。随着3.6.0版本孵化的[**项目**](https://github.com/vert-x3/vertx-web/tree/master/vertx-web-api-service)
 提供了更好的说明。他使用了自定义的 `@WebApiServiceGen` 注解。
