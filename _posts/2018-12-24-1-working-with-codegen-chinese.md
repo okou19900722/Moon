@@ -199,11 +199,6 @@ tasks.getByName("compileJava").dependsOn("annotationProcessing")
 
 上面的例子，我们用到了 `@ProxyGen` 注解，那么这个注解是干什么用的呢？下面我们来说说 `vertx-codegen` 里的一些概念
 
->在 `vertx-codegen` **3.6.0** 版本之前，为`vertx-service-proxy` 提供服务，但与 `vertx-codegen` 相关的类都是属于 `vertx-codegen` 包的，在3.6.0版本之后，除 `@ProxyGen` 这个类，其他类都移到了 `vertx-service-proxy` 包。 
-
-3.6.0版本可以算是 `vertx-codegen` 的一个里程碑：他更好的支持自定义的功能。随着3.6.0版本孵化的[**项目**](https://github.com/vert-x3/vertx-web/tree/master/vertx-web-api-service)
-提供了更好的说明。他使用了自定义的 `@WebApiServiceGen` 注解。
-
 ## 概念
 
 `Model`, `ModelProvider`, `Generator`, `GeneratorLoader`, `TypeInfo`
@@ -236,25 +231,168 @@ tasks.getByName("compileJava").dependsOn("annotationProcessing")
 
 ### TypeInfo
 
-TypeInfo与Model有点相似，但Model按不同功能而处理不同的数据，而TypeInfo只包含类的字义（包括泛型定义，是否可空等）
+TypeInfo与Model有点相似，但Model按不同功能而处理不同的数据，而TypeInfo只包含类的字义（包括泛型定义，是否可空等）。且TypeInfo不支持自定义。
 
 ## 解剖 vertx-service-proxy
 
 因为 `vertx-codegen` 3.6.0之前的版本对自定义Generator和Model不是很友好，因此我们主要讲3.6.0之后的版本。
 
 首先是 `ModelProvider` ，`vertx-service-proxy` 提供了一个类[**ProxyModelProvider**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/model/ProxyModelProvider.java)
-用来提供自定义的Model对象[**ProxyModel**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/model/ProxyModel.java)
-
+用来提供自定义的Model对象[**ProxyModel**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/model/ProxyModel.java)。
 ProxyModelProvider的实现很简单，使用了@ProxyGen注解的类，会生成ProxyModel对象。
 
 接着是 `GeneratorLoader`，`vertx-service-proxy` 提供的类是[**ServiceProxyGenLoader**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/ServiceProxyGenLoader.java) ，
 他的 `loadGenerators` 方法返回了两个Generator：[**ServiceProxyHandlerGen**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/ServiceProxyHandlerGen.java) 
-和 [**ServiceProxyGen**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/ServiceProxyGen.java)
+和 [**ServiceProxyGen**](https://github.com/vert-x3/vertx-service-proxy/blob/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/ServiceProxyGen.java)。
+ServiceProxyHandlerGen类用来生成 `VertxProxyHandler` 后缀的类，而ServiceProxyGen类用来生成 `VertxEBProxy` 后缀的类。
+
+因为这些类之前都是 `vertx-codegen` 包的，所以 `ApiTypeInfo` 类里保留了proxyGen 值来标记是否收使用 `@ProxyGen` 注解的类
+
+>在 `vertx-codegen` **3.6.0** 版本之前，与 `vertx-codegen` 相关，但为 `vertx-service-proxy` 提供服务的类都是属于 `vertx-codegen` 包的，在3.6.0版本之后，除 `@ProxyGen` 这个类，其他类都移到了 `vertx-service-proxy` 包。其中 `ServiceProxyHandlerGen` 和 `ServiceProxyGen` 类是3.6.0版本移除了mvel之后新加的类 
+
+3.6.0版本可以算是 `vertx-codegen` 的一个里程碑：他更好的支持自定义的功能。随着3.6.0版本孵化的[**项目**](https://github.com/vert-x3/vertx-web/tree/master/vertx-web-api-service)
+提供了更好的说明。他使用了自定义的 `@WebApiServiceGen` 注解。
+
+## `vertx-codegen` 实战
+
+目前 vert.x 的代码风格大部分是基于回调的，而基于回调的代码有个最大的问题： `回调地狱` 。
+
+![callback-hell](assets/img/codegen/callback-hell.jpg)
+
+当然，我们也可以通过 `Future` 来解决回调地狱的问题（其他方式还有rx/kotlin coroutine, vertx-sync等）
+
+![Future examples](assets/img/codegen/future.jpg)
+(图片来自QQ群消息，如果侵权请联系我)
+
+虽然 vert.x 给我们提供了 `Future` 类来解决回调问题，但官方的api依然还是回调风格（Future的代码根据官方的 
+[路线图](https://github.com/vert-x3/wiki/wiki/Vert.x-Roadmap#completionstage-support) 
+来说要等4.0）
+
+所以本节我们通过将现有api的回调风格改为返回Future来体验如何使用vertx-codegen来生成我们需要的代码
+
+### 准备
+
+本例子，我们将会有两个模块：`vertx-future-wrapper` 和 `vertx-future-wrapper-gen` 。在 `vertx-future-wrapper-gen` 模块中，我们来实现 `vertx-codegen` 提供的接口，
+然后在 `vertx-future-wrapper` 模块中使用 `vertx-codegen` 和 `vertx-future-wrapper-gen` 来生成我们需要的代码。
+
+> 本例使用maven来构建（gradle没有研究过，官方通过codegen生成代码的项目目前都是使用maven来构建的，所以本例也使用maven）
+
+#### 分析
+
+首先我们需要处理的是通过 `@VertxGen` 注解的类，因此我们不需要额外的注解，同时也不需要生成自己的Model，因此我们也不需要 `ModelProvider` 和自定义的 `Model` 类。
+
+综上所述，我们只需要自定义 `Generator` 和加载自定义Generator的GeneratorLoader 。
+
+同时因为我们是转换的类，所以我们需要一个注解 `FutureGen` 来标记wrapper之前的类（[vertx-rx](https://github.com/vert-x3/vertx-rx/blob/master/rx-gen/src/main/java/io/vertx/lang/rx/RxGen.java)也是这么干的）
+
+所以我们生成的类应该是这样：
+
+回调风格的api
+
+```java
+package io.vertx.core;
+@VertxGen
+public interface Api {
+    void close(Handler<AsyncResult<Void>> handler);
+}
+```
+
+生成的类
+
+```java
+@FutureGen(io.vertx.core.Api.class)
+public class Api {
+    public io.vertx.core.Future<Void> fClose(){
+        return io.vertx.core.Future.future(r -> close(r));
+    }
+}
+```
+
+#### 解包源码
+
+因为执行codegen需要源码，而我们需要执行的源码即为 `vert.x` 各模块的源码，因此第一次事情是将我们需要的源码打包。
+
+我们使用maven的插件 `maven-dependency-plugin` 来解包 `vertx-core` 源码（需要生成其他包的类只需要配置此插件添加相应的包即可）
+
+```xml
+<plugin>
+    <artifactId>maven-dependency-plugin</artifactId>
+    <version>3.0.2</version>
+    <configuration>
+      <includeGroupIds>io.vertx</includeGroupIds>
+      <includeArtifactIds>
+        vertx-core,
+      </includeArtifactIds>
+      <classifier>sources</classifier>
+      <includeTypes>jar</includeTypes>
+    </configuration>
+    <executions>
+      <execution>
+        <id>unpack-java</id>
+        <phase>generate-sources</phase>
+        <goals>
+          <goal>unpack-dependencies</goal>
+        </goals>
+        <configuration>
+            <includes>io/vertx/**/*.java</includes>
+            <excludes>**/impl/**/*.java,**/logging/**/*.java,io/vertx/groovy/**,io/vertx/reactivex/**,io/vertx/rxjava/**</excludes>
+            <outputDirectory>${project.build.directory}/sources/java</outputDirectory>
+        </configuration>
+      </execution>
+    </executions>
+</plugin>
+```
+
+此配置只解包io.vertx包及子包的文件，并排除impl包中的实现类（实现类与codegen无关），logging包中的类（日志相关的类也与codegen无关）。
+
+通过上述配置，即可将vertx-core 中我们需要的源码解压到 `vertx-future-wrapper` 模块的 `target/sources/java` 目录。
+
+### 自定义Generator和GeneratorLoader
+
+新建 `FutureWrapperGeneratorLoader` 和 `FutureWrapperGenerator` 类，
+
+FutureWrapperGeneratorLoader 比较简单，我们直接放代码在这里。
+
+```java
+import io.vertx.codegen.Generator;
+import io.vertx.codegen.GeneratorLoader;
+import javax.annotation.processing.ProcessingEnvironment;
+import java.util.stream.Stream;
+
+public class FutureWrapperGeneratorLoader implements GeneratorLoader {
+  @Override
+  public Stream<Generator<?>> loadGenerators(ProcessingEnvironment processingEnv) {
+    return Stream.of(new FutureWrapperGenerator());
+  }
+}
+```
+
+接下来我们具体分析 `FutureWrapperGenerator` 类
+
+`FutureWrapperGenerator` 类必须继承自 `io.vertx.codegen.Generator` 类。 `Generator` 类有个泛型 `M` ，`M` 必须是 `Model` 的子类，这是我们在实现时需要关注的类型。因为我们只关注@VertxGen标识的类，因为我们只需要关注 `ClassModel`。
+即这里的泛型使用ClassModel。
+
+然后我们需要在构造方法里设置Generator的name和需要处理的kind（Model接口有个getKind方法，是Model类类型的唯一标识）。 `ClassModel` 的kind为 `class` 。
+
+所以FutureWrapperGenerator的构造方法应该为
+
+```java
+class FutureWrapperGenerator extends Generator<ClassModel> {
+  FutureWrapperGenerator() {
+    this.name = "FutureWrapper";
+    this.kinds = Collections.singleton("class");
+  }
+}
+```
+
+接着是 `filename` 方法，他用来决定生成的class的名字。这里有3种选择：
+
+1. 类的完整
 
 
-以上这些可以查看vertx-service-proxy的services[**目录**](https://github.com/vert-x3/vertx-service-proxy/tree/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/resources/META-INF/services)
-model[**目录**](https://github.com/vert-x3/vertx-service-proxy/tree/9d2a5641085a81d17adb67663fa4eefed760fef8/src/main/java/io/vertx/serviceproxy/generator/model)
-（本文作文时的版本）
+
+
+
 
 
 
