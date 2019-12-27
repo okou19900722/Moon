@@ -156,11 +156,12 @@ dependencies {
 ([**gradle5示例**](https://github.com/okou19900722/blog-source/tree/master/working-with-vertx-codegen/service-proxy-gradle5-compiler-args))
 
 ```kotlin
-tasks.getByName("compileJava") {
-    this as JavaCompile
-    options.compilerArgs = listOf(
-            "-Acodegen.output=src/main"
-    )
+val compileJava = tasks.named<JavaCompile>("compileJava")
+compileJava {
+  options.annotationProcessorGeneratedSourcesDirectory = file("build/generated")
+  options.compilerArgs = listOf(
+    "-Acodegen.output=src/main"
+  )
 }
 ```
 
@@ -172,7 +173,7 @@ tasks.getByName("compileJava") {
 ```kotlin
 task<JavaCompile>("annotationProcessing") {
     source = sourceSets["main"].java
-    classpath = configurations.compile.get() + configurations.compileOnly.get()
+    classpath = configurations["compile"] + configurations["compileOnly"]
     destinationDir = project.file("build/generated")
     //如果是gradle 4则不需要设置annotationProcessorPath，所有相关的依赖配置只需要使用compile即可
     options.annotationProcessorPath = classpath
@@ -189,11 +190,13 @@ task<JavaCompile>("annotationProcessing") {
 tasks.getByName("compileJava").dependsOn("annotationProcessing")
 ```
 
-这里推荐第二种：自定义task的配置。原因如下，如果有错误可以指出
+~~这里推荐第二种：自定义task的配置。原因如下，如果有错误可以指出~~
 
 1. 第二种粒度更小，在只需要执行AnnotationProcessor的时候可以只执行它
-2. 第一种生成的代码在 `build/classes/java/main` 目录下，而这个目录同时也是编译之后的 `.class` 文件，这导致源码与编译代码混在了一起，打包还需要额外配置将他排除在外
-3. 假设第二条通过配置 `codegen.output.service_proxy=generated` 来配置 `service_proxy` 的输出目录，哪怕将generated目录添加到sourceSet，也无法编译。
+2. ~~第一种生成的代码在 `build/classes/java/main` 目录下，而这个目录同时也是编译之后的 `.class` 文件，这导致源码与编译代码混在了一起，打包还需要额外配置将他排除在外~~
+3. ~~假设第二条通过配置 `codegen.output.service_proxy=generated` 来配置 `service_proxy` 的输出目录，哪怕将generated目录添加到sourceSet，也无法编译。~~
+
+>上面内容删除，已经知道了比较好的实现，因此自由选择哪种方案
 
 # vertx-codegen 里的一些概念
 
@@ -252,6 +255,26 @@ ServiceProxyHandlerGen类用来生成 `VertxProxyHandler` 后缀的类，而Serv
 
 3.6.0版本可以算是 `vertx-codegen` 的一个里程碑：他更好的支持自定义的功能。随着3.6.0版本孵化的[**项目**](https://github.com/vert-x3/vertx-web/tree/master/vertx-web-api-service)
 提供了更好的说明。他使用了自定义的 `@WebApiServiceGen` 注解。
+
+## 还有啥
+
+官方项目，使用 `vertx-codegen` 的，除了 `vertx-service-proxy` 还有啥呢？
+
+下面这些项目都使用了 `vertx-codegen` ，括号里是提供Generator的name，可以通过name设置执行的codegen
+
+1. `vertx-lang-js-gen` (`JavaScript`)
+2. `vertx-lang-kotlin-gen` (`Kotlin`,`KotlinCoroutines`)
+3. `vertx-lang-groovy-gen` (`Groovy`)
+4. `vertx-lang-scala-codegen` (`Scala`)
+5. `vertx-lang-ruby-gen` (`Ruby`)
+6. `vertx-rx-java-gen` (`RxJava`)
+7. `vertx-rx-java2-gen` (`RxJava2`)
+8. `vertx-codegen` (`cheatsheet`,`data_object_converters`)
+9. `vertx-service-proxy` (`service_proxy_handler`,`service_proxy`)
+10. `vertx-sockjs-service-proxy` (`sockjs_service_proxies`)
+
+我们可以按需使用以上模块（甚至组合使用，比如使用 `service_proxy` ， `service_proxy_handler` 生成service proxy类，
+然后使用 `RxJava2` 生成rx风格的service proxy，或者使用 `KotlinCoroutines` 生成Await后缀协程方法）
 
 ## `vertx-codegen` 实战
 
@@ -387,7 +410,11 @@ class FutureWrapperGenerator extends Generator<ClassModel> {
 
 接着是 `filename` 方法，他用来决定生成的class的名字。这里有3种选择：
 
-1. 类的完整
+1. 类名(包括包名).java
+2. resources开头的路径
+3. 路径
+
+使用类名.java，生成的java文件输出在
 
 
 
